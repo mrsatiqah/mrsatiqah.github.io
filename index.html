@@ -1,368 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mrs Atiqah - Trading Journey Notes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mrs Atiqah - Trading Journey Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --mint-bright: #34D399;
+    --mint-bright-hover: #10B981;
+    --baby-blue-bright: #60A5FA;
+    --baby-blue-bright-hover: #3B82F6;
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-tertiary: #F1F5F9;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --border-subtle: rgba(15, 23, 42, 0.1);
+    --border-light: rgba(52, 211, 153, 0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #FFFFFF;
-            color: #0F172A;
-            line-height: 1.6;
-        }
+/* Nav */
+.nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 100; }
+.nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 0; }
+.logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s ease; }
+.nav-links a:hover { color: var(--mint-bright); }
+.nav-links a i { font-size: 0.8rem; opacity: 0.6; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text-primary); cursor: pointer; }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 20px;
-        }
+/* Hero */
+.hero { text-align: center; padding: 4rem 0 2.5rem; }
+.eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mint-bright-hover); margin-bottom: 1rem; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.15; }
+.hero p { font-size: 1.1rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto; }
 
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #E2E8F0;
-        }
+/* Controls bar */
+.controls-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 2rem; }
+.results-count { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+.controls-right { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.search-box { position: relative; }
+.search-box input { padding: 0.55rem 1rem 0.55rem 2.2rem; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 0.9rem; font-family: inherit; width: 220px; background: var(--bg-secondary); color: var(--text-primary); }
+.search-box input:focus { outline: none; border-color: var(--mint-bright); background: white; }
+.search-box i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+.view-toggle { display: flex; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; }
+.view-toggle button { background: var(--bg-secondary); border: none; padding: 0.55rem 0.9rem; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; transition: all 0.2s ease; }
+.view-toggle button.active { background: var(--mint-bright); color: white; }
+.show-select { padding: 0.55rem 0.9rem; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 0.9rem; font-family: inherit; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; }
+.show-select:focus { outline: none; }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #34D399 0%, #60A5FA 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
+/* Grid view */
+.article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.article-grid.list-view { grid-template-columns: 1fr; }
 
-        .subtitle {
-            color: #64748B;
-            font-size: 1rem;
-        }
+.card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 1.5rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: all 0.2s ease; }
+.card:hover { border-color: var(--mint-bright); transform: translateY(-3px); box-shadow: 0 12px 24px rgba(52,211,153,0.12); }
+.list-view .card { flex-direction: row; align-items: center; gap: 1.5rem; }
+.card-number { display: inline-flex; align-items: center; justify-content: center; width: fit-content; padding: 0.3rem 0.75rem; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; font-size: 0.7rem; font-weight: 700; border-radius: 20px; margin-bottom: 0.75rem; }
+.list-view .card-number { flex-shrink: 0; margin-bottom: 0; min-width: 78px; text-align: center; }
+.card-body { flex: 1; }
+.card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.4rem; line-height: 1.35; }
+.card-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+.list-view .card-desc { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.card-arrow { color: var(--mint-bright-hover); font-size: 0.9rem; opacity: 0; transition: opacity 0.2s ease; margin-left: auto; flex-shrink: 0; }
+.card:hover .card-arrow { opacity: 1; }
 
-        .overall-progress {
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.no-results { text-align: center; padding: 4rem 1rem; color: var(--text-muted); grid-column: 1 / -1; }
+.no-results i { font-size: 2rem; margin-bottom: 1rem; display: block; color: var(--border-subtle); }
 
-        .overall-progress-text {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #0F172A;
-        }
+.load-more-wrap { text-align: center; margin: 2.5rem 0 1rem; }
+.load-more-btn { background: var(--bg-secondary); border: 1px solid var(--border-subtle); padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; font-family: inherit; transition: all 0.2s ease; }
+.load-more-btn:hover { border-color: var(--mint-bright); color: var(--mint-bright-hover); }
+.load-more-btn.hidden { display: none; }
 
-        .overall-progress-bar {
-            width: 140px;
-            height: 8px;
-            background: #E2E8F0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
+/* Resources strip */
+.resources-strip { background: linear-gradient(135deg, rgba(52,211,153,0.06) 0%, rgba(96,165,250,0.06) 100%); border: 1px solid var(--border-light); border-radius: 16px; padding: 1.75rem; margin: 3rem 0; display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; justify-content: space-between; }
+.resources-text h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 0.25rem; }
+.resources-text p { font-size: 0.9rem; color: var(--text-secondary); }
+.resources-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.resource-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s ease; }
+.resource-btn.primary { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; }
+.resource-btn.secondary { background: white; color: var(--text-primary); border: 1px solid var(--border-subtle); }
+.resource-btn:hover { transform: translateY(-2px); }
 
-        .overall-progress-fill {
-            height: 100%;
-            width: 20%;
-            background: linear-gradient(90deg, #34D399 0%, #60A5FA 100%);
-        }
+/* Footer */
+footer { border-top: 1px solid var(--border-subtle); margin-top: 3rem; padding: 2.5rem 0; }
+.footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-social { display: flex; gap: 1.25rem; }
+.footer-social a { color: var(--text-muted); text-decoration: none; font-size: 1.1rem; transition: color 0.2s ease; }
+.footer-social a:hover { color: var(--mint-bright); }
+.footer-copy { font-size: 0.85rem; color: var(--text-muted); }
+.footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-nav a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+.footer-nav a:hover { color: var(--mint-bright); }
 
-        .article-list {
-            list-style: none;
-        }
-
-        .article-item {
-            margin-bottom: 1rem;
-        }
-
-        .article-link {
-            display: block;
-            padding: 1.5rem;
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #0F172A;
-            transition: all 0.2s ease;
-        }
-
-        .article-link:hover {
-            border-color: #34D399;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(52, 211, 153, 0.15);
-        }
-
-        .article-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #34D399 0%, #60A5FA 100%);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            margin-bottom: 0.5rem;
-        }
-
-        .article-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .article-desc {
-            font-size: 0.9rem;
-            color: #64748B;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid #E2E8F0;
-            color: #94A3B8;
-            font-size: 0.85rem;
-        }
-    </style>
+@media (max-width: 768px) {
+    .mobile-menu-btn { display: block; }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 2rem; }
+    .controls-bar { flex-direction: column; align-items: flex-start; }
+    .search-box input { width: 160px; }
+    .list-view .card { flex-direction: column; align-items: flex-start; }
+    .list-view .card-number { margin-bottom: 0.75rem; }
+    .resources-strip { flex-direction: column; align-items: flex-start; }
+    .footer-content { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">Mrs Atiqah</div>
-            <p class="subtitle">Trading Journey Notes</p>
-        </header>
 
-        <div class="overall-progress">
-            <span class="overall-progress-text">6 of 30 articles live</span>
-            <div class="overall-progress-bar"><div class="overall-progress-fill"></div></div>
-        </div>
-
-        <ul class="article-list">
-            <li class="article-item">
-                <a href="article-1.html" class="article-link">
-                    <span class="article-number">Article 1</span>
-                    <div class="article-title">What Is Trading? Complete Beginner's Guide</div>
-                    <div class="article-desc">A complete beginner's guide to understanding trading, markets, and whether this world is right for you.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-2.html" class="article-link">
-                    <span class="article-number">Article 2</span>
-                    <div class="article-title">Why I Started My Trading Journey</div>
-                    <div class="article-desc">A personal story from pandemic desperation to discovering a real passion for markets.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-3.html" class="article-link">
-                    <span class="article-number">Article 3</span>
-                    <div class="article-title">Understanding Market Hours and Global Sessions</div>
-                    <div class="article-desc">Master the global financial clock and discover when markets are most active.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-4.html" class="article-link">
-                    <span class="article-number">Article 4</span>
-                    <div class="article-title">Essential Trading Tools</div>
-                    <div class="article-desc">Discover the right tools, platforms, and technology to execute your strategies effectively.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-5.html" class="article-link">
-                    <span class="article-number">Article 5</span>
-                    <div class="article-title">Trading Terminology Every Beginner Must Know</div>
-                    <div class="article-desc">Master the language of trading with simple explanations. No jargon, just practical knowledge.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-6.html" class="article-link">
-                    <span class="article-number">Article 6</span>
-                    <div class="article-title">Types of Financial Markets: Which One to Choose?</div>
-                    <div class="article-desc">Discover the major financial markets and learn how to choose the best one for your trading style.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-7.html" class="article-link">
-                    <span class="article-number">Article 7</span>
-                    <div class="article-title">How to Read Price Charts: Candlesticks Explained</div>
-                    <div class="article-desc">Learn how to read candlestick charts and what each pattern is telling you.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-8.html" class="article-link">
-                    <span class="article-number">Article 8</span>
-                    <div class="article-title">Dealing with Trading Losses</div>
-                    <div class="article-desc">How to process, learn from, and move past losing trades without losing your discipline.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-9.html" class="article-link">
-                    <span class="article-number">Article 9</span>
-                    <div class="article-title">Support and Resistance: Finding Key Levels</div>
-                    <div class="article-desc">Identify the price levels that matter most and understand why they keep showing up on charts.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-10.html" class="article-link">
-                    <span class="article-number">Article 10</span>
-                    <div class="article-title">Emotional Triggers in Trading</div>
-                    <div class="article-desc">Recognize the emotional patterns that quietly sabotage even well-planned trades.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-11.html" class="article-link">
-                    <span class="article-number">Article 11</span>
-                    <div class="article-title">Technical Indicators: Moving Averages Deep Dive</div>
-                    <div class="article-desc">A closer look at SMA and EMA, and how traders use them to read trend direction.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-12.html" class="article-link">
-                    <span class="article-number">Article 12</span>
-                    <div class="article-title">Volume Analysis: Reading Market Participation</div>
-                    <div class="article-desc">Understand what trading volume reveals about the strength behind a price move.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-13.html" class="article-link">
-                    <span class="article-number">Article 13</span>
-                    <div class="article-title">Trading Psychology: Mastering Fear and Greed</div>
-                    <div class="article-desc">The two emotions that drive most trading decisions, and how to keep them in check.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-14.html" class="article-link">
-                    <span class="article-number">Article 14</span>
-                    <div class="article-title">Position Sizing: The Foundation of Risk Management</div>
-                    <div class="article-desc">Why how much you trade matters more than what you trade.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-15.html" class="article-link">
-                    <span class="article-number">Article 15</span>
-                    <div class="article-title">Risk-Reward Ratios: The Math Behind Profits</div>
-                    <div class="article-desc">The simple math that separates traders who survive from traders who don't.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-16.html" class="article-link">
-                    <span class="article-number">Article 16</span>
-                    <div class="article-title">Find Your Trading Personality</div>
-                    <div class="article-desc">Match your natural temperament to a trading style that actually fits how you think.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-17.html" class="article-link">
-                    <span class="article-number">Article 17</span>
-                    <div class="article-title">Common Trading Mistakes and How to Avoid Them</div>
-                    <div class="article-desc">The recurring errors that trip up most beginners, and practical ways to sidestep them.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-18.html" class="article-link">
-                    <span class="article-number">Article 18</span>
-                    <div class="article-title">Understanding Trends and Ranges</div>
-                    <div class="article-desc">Learn to tell whether the market is trending or just chopping sideways, and why it matters.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-19.html" class="article-link">
-                    <span class="article-number">Article 19</span>
-                    <div class="article-title">Price Action Trading: Reading Raw Charts</div>
-                    <div class="article-desc">Trading based on price movement itself, without relying on indicators.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-20.html" class="article-link">
-                    <span class="article-number">Article 20</span>
-                    <div class="article-title">Economic Calendar: Trading Around News Events</div>
-                    <div class="article-desc">How to plan your trading schedule around the news releases that move markets.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-21.html" class="article-link">
-                    <span class="article-number">Article 21</span>
-                    <div class="article-title">Multiple Timeframe Analysis: The Professional's Edge</div>
-                    <div class="article-desc">Why looking at more than one timeframe changes how you see every chart.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-22.html" class="article-link">
-                    <span class="article-number">Article 22</span>
-                    <div class="article-title">Advanced Chart Patterns: Beyond the Basics</div>
-                    <div class="article-desc">A deeper look at chart patterns once you've mastered the fundamentals.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-23.html" class="article-link">
-                    <span class="article-number">Article 23</span>
-                    <div class="article-title">Dealing with Trading Losses (Part 2)</div>
-                    <div class="article-desc">Revisiting losses with a more advanced lens now that real experience has been added.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-24.html" class="article-link">
-                    <span class="article-number">Article 24</span>
-                    <div class="article-title">Building Trading Confidence</div>
-                    <div class="article-desc">How consistent process, not lucky wins, builds real confidence at the charts.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-25.html" class="article-link">
-                    <span class="article-number">Article 25</span>
-                    <div class="article-title">Position Sizing Strategies</div>
-                    <div class="article-desc">More advanced position sizing models beyond the basic 1-2% rule.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-26.html" class="article-link">
-                    <span class="article-number">Article 26</span>
-                    <div class="article-title">Risk Management Fundamentals</div>
-                    <div class="article-desc">Tying together everything learned so far into one coherent risk management framework.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-27.html" class="article-link">
-                    <span class="article-number">Article 27</span>
-                    <div class="article-title">Trading Journal: Why and How to Keep One</div>
-                    <div class="article-desc">The habit that separates traders who improve from traders who just repeat the same mistakes.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-28.html" class="article-link">
-                    <span class="article-number">Article 28</span>
-                    <div class="article-title">Backtesting Your Strategy Before Going Live</div>
-                    <div class="article-desc">How to test a strategy against historical data before ever risking real money on it.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-29.html" class="article-link">
-                    <span class="article-number">Article 29</span>
-                    <div class="article-title">Choosing a Broker: What Really Matters</div>
-                    <div class="article-desc">A practical checklist for picking a broker beyond flashy ads and referral bonuses.</div>
-                </a>
-            </li>
-            <li class="article-item">
-                <a href="article-30.html" class="article-link">
-                    <span class="article-number">Article 30</span>
-                    <div class="article-title">Building a Trading Routine That Sticks</div>
-                    <div class="article-desc">Turning everything in this series into a sustainable daily and weekly trading routine.</div>
-                </a>
-            </li>
+<nav class="nav">
+    <div class="container nav-content">
+        <a href="index.html" class="logo">Mrs Atiqah</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="https://mrsatiqah.github.io/trading-journal/" target="_blank">Trading Journal <i class="fas fa-arrow-up-right-from-square"></i></a></li>
+            <li><a href="https://mrsatiqah.github.io/trading-journal/dashboard/" target="_blank">Dashboard <i class="fas fa-arrow-up-right-from-square"></i></a></li>
         </ul>
-
-        <footer>
-            <p>Mrs Atiqah &middot; Trading Journey Notes</p>
-        </footer>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
     </div>
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <div class="eyebrow">30-Part Series</div>
+        <h1>Trading Journey Notes</h1>
+        <p>From first candlestick to a routine that sticks, a complete beginner-to-practitioner path through the markets.</p>
+    </div>
+
+    <div class="controls-bar">
+        <div class="results-count" id="resultsCount">30 articles found</div>
+        <div class="controls-right">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search articles...">
+            </div>
+            <div class="view-toggle">
+                <button id="gridBtn" class="active"><i class="fas fa-grip"></i></button>
+                <button id="listBtn"><i class="fas fa-list"></i></button>
+            </div>
+            <select class="show-select" id="showSelect">
+                <option value="6">Show: 6</option>
+                <option value="12" selected>Show: 12</option>
+                <option value="24">Show: 24</option>
+                <option value="30">Show: 30</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="article-grid" id="articleGrid"></div>
+
+    <div class="load-more-wrap">
+        <button class="load-more-btn" id="loadMoreBtn">Load more articles</button>
+    </div>
+
+    <div class="resources-strip">
+        <div class="resources-text">
+            <h3>More than just notes</h3>
+            <p>Track live trades and review performance alongside the lessons.</p>
+        </div>
+        <div class="resources-links">
+            <a href="https://mrsatiqah.github.io/trading-journal/" target="_blank" class="resource-btn primary"><i class="fas fa-book"></i> Trading Journal</a>
+            <a href="https://mrsatiqah.github.io/trading-journal/dashboard/" target="_blank" class="resource-btn secondary"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-content">
+        <div class="footer-social">
+            <a href="https://mrsatiqah.github.io/trading-journal/" target="_blank"><i class="fas fa-book"></i></a>
+            <a href="https://mrsatiqah.github.io/trading-journal/dashboard/" target="_blank"><i class="fas fa-chart-pie"></i></a>
+        </div>
+        <nav class="footer-nav">
+            <a href="index.html">Home</a>
+            <a href="https://mrsatiqah.github.io/trading-journal/" target="_blank">Trading Journal</a>
+            <a href="https://mrsatiqah.github.io/trading-journal/dashboard/" target="_blank">Dashboard</a>
+        </nav>
+        <div class="footer-copy">&copy; 2026 Mrs Atiqah. All rights reserved.</div>
+    </div>
+</footer>
+
+<script>
+const articles = [
+    { n: 1, title: "What Is Trading? Complete Beginner's Guide", desc: "A complete beginner's guide to understanding trading, markets, and whether this world is right for you." },
+    { n: 2, title: "Why I Started My Trading Journey", desc: "A personal story from pandemic desperation to discovering a real passion for markets." },
+    { n: 3, title: "Understanding Market Hours and Global Sessions", desc: "Master the global financial clock and discover when markets are most active." },
+    { n: 4, title: "Essential Trading Tools", desc: "Discover the right tools, platforms, and technology to execute your strategies effectively." },
+    { n: 5, title: "Trading Terminology Every Beginner Must Know", desc: "Master the language of trading with simple explanations. No jargon, just practical knowledge." },
+    { n: 6, title: "Types of Financial Markets: Which One to Choose?", desc: "Discover the major financial markets and learn how to choose the best one for your trading style." },
+    { n: 7, title: "How to Read Price Charts: Candlesticks Explained", desc: "Learn how to read candlestick charts and what each pattern is telling you." },
+    { n: 8, title: "Dealing with Trading Losses", desc: "How to process, learn from, and move past losing trades without losing your discipline." },
+    { n: 9, title: "Support and Resistance: Finding Key Levels", desc: "Identify the price levels that matter most and understand why they keep showing up on charts." },
+    { n: 10, title: "Emotional Triggers in Trading", desc: "Recognize the emotional patterns that quietly sabotage even well-planned trades." },
+    { n: 11, title: "Technical Indicators: Moving Averages Deep Dive", desc: "A closer look at SMA and EMA, and how traders use them to read trend direction." },
+    { n: 12, title: "Volume Analysis: Reading Market Participation", desc: "Understand what trading volume reveals about the strength behind a price move." },
+    { n: 13, title: "Trading Psychology: Mastering Fear and Greed", desc: "The two emotions that drive most trading decisions, and how to keep them in check." },
+    { n: 14, title: "Position Sizing: The Foundation of Risk Management", desc: "Why how much you trade matters more than what you trade." },
+    { n: 15, title: "Risk-Reward Ratios: The Math Behind Profits", desc: "The simple math that separates traders who survive from traders who don't." },
+    { n: 16, title: "Find Your Trading Personality", desc: "Match your natural temperament to a trading style that actually fits how you think." },
+    { n: 17, title: "Common Trading Mistakes and How to Avoid Them", desc: "The recurring errors that trip up most beginners, and practical ways to sidestep them." },
+    { n: 18, title: "Understanding Trends and Ranges", desc: "Learn to tell whether the market is trending or just chopping sideways, and why it matters." },
+    { n: 19, title: "Price Action Trading: Reading Raw Charts", desc: "Trading based on price movement itself, without relying on indicators." },
+    { n: 20, title: "Economic Calendar: Trading Around News Events", desc: "How to plan your trading schedule around the news releases that move markets." },
+    { n: 21, title: "Multiple Timeframe Analysis: The Professional's Edge", desc: "Why looking at more than one timeframe changes how you see every chart." },
+    { n: 22, title: "Advanced Chart Patterns: Beyond the Basics", desc: "A deeper look at chart patterns once you've mastered the fundamentals." },
+    { n: 23, title: "Trading During Market Volatility", desc: "Calm seas make comfortable sailors, but storms are where fortunes are made and lost." },
+    { n: 24, title: "Building Trading Confidence", desc: "How consistent process, not lucky wins, builds real confidence at the charts." },
+    { n: 25, title: "Position Sizing Strategies", desc: "More advanced position sizing models beyond the basic 1-2% rule." },
+    { n: 26, title: "Correlation and Intermarket Analysis", desc: "No market trades in isolation, learn how currencies, bonds, stocks, and commodities move together." },
+    { n: 27, title: "Trading Journal: Why and How to Keep One", desc: "The habit that separates traders who improve from traders who just repeat the same mistakes." },
+    { n: 28, title: "Backtesting Your Strategy Before Going Live", desc: "How to test a strategy against historical data before ever risking real money on it." },
+    { n: 29, title: "Choosing a Broker: What Really Matters", desc: "A practical checklist for picking a broker beyond flashy ads and referral bonuses." },
+    { n: 30, title: "Building a Trading Routine That Sticks", desc: "Turning everything in this series into a sustainable daily and weekly trading routine." }
+];
+
+let filtered = [...articles];
+let showCount = 12;
+let displayedCount = 12;
+let isListView = false;
+
+const grid = document.getElementById('articleGrid');
+const resultsCount = document.getElementById('resultsCount');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+function render() {
+    grid.classList.toggle('list-view', isListView);
+    const toShow = filtered.slice(0, displayedCount);
+    resultsCount.textContent = filtered.length + (filtered.length === 1 ? ' article found' : ' articles found');
+
+    if (toShow.length === 0) {
+        grid.innerHTML = '<div class="no-results"><i class="fas fa-magnifying-glass"></i>No articles match your search</div>';
+        loadMoreBtn.classList.add('hidden');
+        return;
+    }
+
+    grid.innerHTML = toShow.map(a => `
+        <a href="article-${a.n}.html" class="card">
+            <span class="card-number">Article ${a.n}</span>
+            <div class="card-body">
+                <div class="card-title">${a.title}</div>
+                <div class="card-desc">${a.desc}</div>
+            </div>
+            <i class="fas fa-arrow-right card-arrow"></i>
+        </a>
+    `).join('');
+
+    loadMoreBtn.classList.toggle('hidden', displayedCount >= filtered.length);
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    filtered = articles.filter(a => a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q));
+    displayedCount = showCount;
+    render();
+});
+
+document.getElementById('showSelect').addEventListener('change', (e) => {
+    showCount = parseInt(e.target.value);
+    displayedCount = showCount;
+    render();
+});
+
+document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    displayedCount += showCount;
+    render();
+});
+
+document.getElementById('gridBtn').addEventListener('click', () => {
+    isListView = false;
+    document.getElementById('gridBtn').classList.add('active');
+    document.getElementById('listBtn').classList.remove('active');
+    render();
+});
+
+document.getElementById('listBtn').addEventListener('click', () => {
+    isListView = true;
+    document.getElementById('listBtn').classList.add('active');
+    document.getElementById('gridBtn').classList.remove('active');
+    render();
+});
+
+render();
+</script>
 </body>
 </html>
