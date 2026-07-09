@@ -1,9 +1,408 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article 19: Price Action Trading - Reading Raw Charts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --light-bg-primary: #FFFFFF;
+            --light-bg-secondary: #F8FAFC;
+            --light-bg-tertiary: #F1F5F9;
+            --mint-bright: #34D399;
+            --mint-bright-hover: #10B981;
+            --baby-blue-bright: #60A5FA;
+            --baby-blue-bright-hover: #3B82F6;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #64748B;
+            --border-light: rgba(52, 211, 153, 0.3);
+            --border-subtle: rgba(15, 23, 42, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --shadow-light: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 40px rgba(52, 211, 153, 0.2);
+            --warning-bg: #FEF3C7;
+            --warning-border: #F59E0B;
+            --success-bg: #D1FAE5;
+            --success-border: #10B981;
+            --info-bg: #DBEAFE;
+            --info-border: #3B82F6;
+            --error-bg: #FEE2E2;
+            --error-border: #EF4444;
+            --purple-light: #E0E7FF;
+            --purple-border: #8B5CF6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: var(--mint-bright); }
+        .nav-cta { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-primary); cursor: pointer; }
+        .reading-progress { position: fixed; top: 4.5rem; left: 0; right: 0; height: 4px; background: var(--light-bg-tertiary); z-index: 999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); width: 0%; }
+        .article-layout { display: grid; grid-template-columns: 250px 1fr 200px; gap: 3rem; padding-top: 6rem; max-width: 1400px; margin: 0 auto; }
+        .article-nav { position: sticky; top: 6rem; height: fit-content; background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .article-nav h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-list { list-style: none; }
+        .nav-list li { margin-bottom: 0.5rem; }
+        .nav-list a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; display: block; padding: 0.25rem 0; }
+        .nav-list a:hover, .nav-list a.active { color: var(--mint-bright); }
+        .article-content { background: var(--light-bg-primary); border-radius: 12px; overflow: hidden; }
+        .article-header { background: linear-gradient(135deg, var(--light-bg-secondary) 0%, var(--light-bg-tertiary) 100%); padding: 3rem 2rem; text-align: center; border-bottom: 1px solid var(--border-subtle); }
+        .article-meta { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .meta-item { background: var(--glass-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; color: var(--text-secondary); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem; }
+        .article-number { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; font-weight: 600; }
+        .article-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+        .gradient-text { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+        .article-body { padding: 3rem 2rem; }
+        .article-section { margin-bottom: 3rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .article-text { font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .article-text strong { font-weight: 600; }
+        .article-text em { color: var(--mint-bright); font-style: italic; font-weight: 500; }
+        .callout { background: var(--glass-bg); border-left: 4px solid var(--mint-bright); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
+        .callout.warning { border-left-color: var(--warning-border); background: var(--warning-bg); }
+        .callout.success { border-left-color: var(--success-border); background: var(--success-bg); }
+        .callout.info { border-left-color: var(--info-border); background: var(--info-bg); }
+        .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .interactive-box { background: var(--glass-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .interactive-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .interactive-title i { color: var(--mint-bright); }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .concept-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .concept-title { font-weight: 700; margin-bottom: 0.25rem; }
+        .concept-subtitle { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem; }
+        .concept-description { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .concept-detail { background: var(--light-bg-tertiary); padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; }
+        .concept-detail strong { color: var(--mint-bright); }
+        .quote-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%); border: 1px solid var(--purple-border); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .quote-text { font-size: 1.1rem; font-style: italic; margin-bottom: 1rem; }
+        .quote-author { font-size: 0.9rem; color: var(--purple-border); font-weight: 600; }
+        .strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .strategy-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .strategy-title { font-weight: 700; margin-bottom: 0.25rem; }
+        .strategy-subtitle { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem; }
+        .strategy-list { list-style: none; }
+        .strategy-list li { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.4rem; padding-left: 1.25rem; position: relative; }
+        .strategy-list li::before { content: '•'; position: absolute; left: 0; color: var(--mint-bright); }
+        .timeframe-flow { display: flex; justify-content: space-around; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0; }
+        .timeframe-step { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.25rem; text-align: center; flex: 1; min-width: 180px; }
+        .timeframe-step-title { font-weight: 700; margin-bottom: 0.4rem; color: var(--mint-bright); }
+        .timeframe-step-desc { font-size: 0.85rem; color: var(--text-secondary); }
+        .timeframe-arrow { font-size: 1.5rem; color: var(--mint-bright); }
+        .example-box { background: var(--light-bg-tertiary); border-radius: 10px; padding: 1.25rem; margin: 1.5rem 0; font-size: 0.9rem; }
+        .example-box strong { color: var(--mint-bright); }
+        .mistake-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .mistake-card { background: var(--error-bg); border: 1px solid var(--error-border); border-radius: 10px; padding: 1.5rem; border-left: 4px solid var(--error-border); }
+        .mistake-title { font-weight: 600; color: var(--error-border); margin-bottom: 0.5rem; }
+        .mistake-desc { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .mistake-fix { font-size: 0.85rem; color: var(--success-border); font-weight: 500; }
+        .takeaways { background: linear-gradient(135deg, rgba(52, 211, 153, 0.05) 0%, rgba(96, 165, 250, 0.05) 100%); border: 1px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 3rem 0; }
+        .takeaways-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .takeaways-title i { color: var(--mint-bright); }
+        .takeaways-list { list-style: none; }
+        .takeaways-list li { margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; }
+        .takeaways-list li::before { content: '✓'; position: absolute; left: 0; color: var(--mint-bright); }
+        .article-sidebar { position: sticky; top: 6rem; height: fit-content; }
+        .sidebar-widget { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .widget-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+        .progress-circle { width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--mint-bright) 0deg 228deg, var(--light-bg-tertiary) 228deg 360deg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; position: relative; }
+        .progress-circle::after { content: '63%'; position: absolute; font-size: 0.875rem; font-weight: 600; }
+        .next-article, .prev-article { padding: 1rem; border-radius: 8px; text-decoration: none; display: block; text-align: center; font-weight: 600; margin-bottom: 1rem; }
+        .next-article { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; }
+        .prev-article { background: var(--glass-bg); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1.2rem; opacity: 0; visibility: hidden; z-index: 1000; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .article-navigation { display: flex; justify-content: space-between; padding: 2rem; border-top: 1px solid var(--border-subtle); gap: 1rem; }
+        .nav-btn { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.5rem; text-decoration: none; color: var(--text-primary); font-weight: 500; flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .nav-btn.next { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; }
+        @media (max-width: 1024px) {
+            .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
+            .article-nav, .article-sidebar { display: none; }
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links, .nav-cta { display: none; }
+            .article-header { padding: 2rem 1.5rem; }
+            .article-title { font-size: 2.2rem; }
+            .article-body { padding: 2rem 1.5rem; }
+            .concept-grid, .strategy-grid, .mistake-grid { grid-template-columns: 1fr; }
+            .timeframe-flow { flex-direction: column; }
+            .timeframe-arrow { transform: rotate(90deg); }
+            .article-navigation { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .article-title { font-size: 1.8rem; }
+            .article-body { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
 <body>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Mrs Atiqah</div>
+                <ul class="nav-links"><li><a href="index.html">Home</a></li></ul>
+                <a href="index.html" class="nav-cta">Article Index</a>
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
 
-<h1>Coming Soon</h1>
+    <div class="reading-progress"><div class="progress-fill" id="progressBar"></div></div>
 
+    <div class="article-layout">
+        <aside class="article-nav">
+            <h4>In This Article</h4>
+            <ul class="nav-list">
+                <li><a href="#introduction" class="active">Raw Market Language</a></li>
+                <li><a href="#what-is-price-action">What Is Price Action?</a></li>
+                <li><a href="#core-concepts">Core Concepts</a></li>
+                <li><a href="#candlestick-reading">Reading Candlesticks</a></li>
+                <li><a href="#entry-strategies">Entry Strategies</a></li>
+                <li><a href="#volume-confirmation">Volume Confirmation</a></li>
+                <li><a href="#multiple-timeframes">Multiple Timeframes</a></li>
+                <li><a href="#common-mistakes">Common Mistakes</a></li>
+                <li><a href="#key-takeaways">Key Takeaways</a></li>
+            </ul>
+        </aside>
 
+        <main class="article-content">
+            <header class="article-header">
+                <div class="article-meta">
+                    <div class="meta-item article-number">Article 19</div>
+                    <div class="meta-item"><i class="fas fa-book-open"></i> 13 min read</div>
+                    <div class="meta-item"><i class="fas fa-chart-area"></i> Price Action</div>
+                </div>
+                <h1 class="article-title">Price Action Trading: <span class="gradient-text">Reading the Market's Native Language</span></h1>
+                <p class="article-subtitle">Strip away all indicators and noise. Learn to read what the market is actually saying through pure price movement, the language professionals use.</p>
+            </header>
+
+            <div class="article-body">
+                <div class="article-section" id="introduction">
+                    <p class="article-text">Strip away all the indicators, oscillators, and fancy algorithms. Remove the moving averages, RSI, MACD, and Bollinger Bands. What you're left with is the purest form of market information: <strong>raw price action.</strong></p>
+                    <p class="article-text">Just the basic candlesticks showing you exactly what happened between buyers and sellers, with no interpretation, no lag, and no noise.</p>
+                    <p class="article-text">Price action trading is like learning to read the market's native language instead of relying on translations. <em>While indicators tell you what price might do based on mathematical formulas, price action shows you what price is actually doing right now.</em></p>
+                    <div class="interactive-box">
+                        <div class="interactive-title"><i class="fas fa-language"></i> The Market's Native Language</div>
+                        <p>Price action is the market's body language. Just as you can tell someone's mood by their posture and facial expressions, you can read market sentiment by how price moves, where it pauses, and how it reacts at key levels.</p>
+                        <p style="margin-top: 1rem; font-style: italic;">No translation needed, just pure, unfiltered truth.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="what-is-price-action">
+                    <h2 class="section-title">What Is Price Action Trading?</h2>
+                    <p class="article-text"><em>Price action trading is a methodology that bases all trading decisions on the movement of price itself, without relying on technical indicators.</em> It focuses on the raw data that matters most: what buyers and sellers are actually doing.</p>
+                    <p class="article-text">The core belief is simple but powerful: <strong>price reflects all available information.</strong> Every news event, economic report, insider knowledge, and market sentiment is already incorporated into the current price.</p>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <div class="concept-title">What Price Action Shows</div>
+                            <div class="concept-subtitle">Pure Market Information</div>
+                            <div class="concept-description">Raw candlestick patterns, support and resistance levels created by actual price interactions, and market structure defined by swing highs and lows.</div>
+                            <div class="concept-detail"><strong>Focus Areas:</strong> Candlestick formations, support/resistance levels, market structure patterns, volume confirmation</div>
+                        </div>
+                        <div class="concept-card">
+                            <div class="concept-title">The Philosophy</div>
+                            <div class="concept-subtitle">Context Over Signals</div>
+                            <div class="concept-description">Price action traders don't look for mechanical signals. They read context, understanding what a price movement means given current market structure and history.</div>
+                            <div class="concept-detail"><strong>Key Principles:</strong> Price discounts everything, simplicity over complexity, context determines meaning, quality over quantity</div>
+                        </div>
+                    </div>
+                    <div class="quote-box">
+                        <div class="quote-text">The market is never wrong, opinions often are.</div>
+                        <div class="quote-author">— Jesse Livermore</div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="core-concepts">
+                    <h2 class="section-title">Essential Price Action Concepts</h2>
+                    <p class="article-text">Master these fundamental concepts and you'll have the foundation to read any market in any timeframe:</p>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <div class="concept-title">Support and Resistance</div>
+                            <div class="concept-subtitle">Price Memory Zones</div>
+                            <div class="concept-description">Not lines drawn by formulas, but levels where price has actually stopped and reversed multiple times, showing real supply and demand imbalances.</div>
+                            <div class="concept-detail"><strong>True Support:</strong> A level where price has stopped declining and reversed higher multiple times. More tests = stronger level.<br><strong>True Resistance:</strong> A level where price has stopped rising and reversed lower multiple times.</div>
+                        </div>
+                        <div class="concept-card">
+                            <div class="concept-title">Market Structure</div>
+                            <div class="concept-subtitle">The Market's Roadmap</div>
+                            <div class="concept-description">Defined by swing highs and lows that show whether buyers or sellers are in control and the overall market direction.</div>
+                            <div class="concept-detail"><strong>Uptrend:</strong> Higher swing highs + higher swing lows<br><strong>Downtrend:</strong> Lower swing highs + lower swing lows<br><strong>Range:</strong> Similar highs and lows, price oscillating</div>
+                        </div>
+                        <div class="concept-card">
+                            <div class="concept-title">Confluence</div>
+                            <div class="concept-subtitle">Multiple Factors Align</div>
+                            <div class="concept-description">The most powerful setups occur when multiple factors align at the same price level, creating high-probability zones.</div>
+                            <div class="concept-detail"><strong>Examples:</strong> Support + trend line + round number, previous high + volume level, failed breakout + structure level</div>
+                        </div>
+                    </div>
+                    <div class="callout success">
+                        <div class="callout-title"><i class="fas fa-layer-group"></i> The Power of Confluence</div>
+                        <p>The more factors that line up at a price level, the higher the probability of a significant reaction. Professional traders wait for these high-confluence zones rather than trading every minor level.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="candlestick-reading">
+                    <h2 class="section-title">Reading Candlestick Formations</h2>
+                    <p class="article-text">Beyond basic patterns, price action traders read the "story" each candle tells about the battle between buyers and sellers:</p>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <div class="concept-title">Single Candle Analysis</div>
+                            <div class="concept-subtitle">Individual Stories</div>
+                            <div class="concept-description">Each candle tells a story about the session's battle between buyers and sellers.</div>
+                            <div class="concept-detail"><strong>Reading the Candles:</strong> Large green candles = strong buying, large red candles = strong selling, small bodies = indecision, long upper wicks = rejection higher, long lower wicks = support found</div>
+                        </div>
+                        <div class="concept-card">
+                            <div class="concept-title">Multi-Candle Patterns</div>
+                            <div class="concept-subtitle">Combined Messages</div>
+                            <div class="concept-description">How candles interact with each other and key levels reveals momentum shifts and market sentiment.</div>
+                            <div class="concept-detail"><strong>Key Patterns:</strong> Engulfing patterns = momentum shift, inside bars = consolidation, pin bars = level rejection, doji series = major indecision</div>
+                        </div>
+                    </div>
+                    <div class="callout info">
+                        <div class="callout-title"><i class="fas fa-lightbulb"></i> Context Is Everything</div>
+                        <p>A hammer candle at major support in an uptrend is very different from a hammer in the middle of nowhere. The significance of any pattern depends entirely on where it occurs relative to market structure.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="entry-strategies">
+                    <h2 class="section-title">Price Action Entry Strategies</h2>
+                    <p class="article-text">Here are the most effective ways to enter trades using pure price action:</p>
+                    <div class="strategy-grid">
+                        <div class="strategy-card">
+                            <div class="strategy-title">Breakout Entries</div>
+                            <div class="strategy-subtitle">Momentum Continuation</div>
+                            <div class="article-text" style="font-size: 0.95rem; margin-bottom: 0.75rem;">Enter when price decisively breaks through significant support or resistance with conviction.</div>
+                            <ul class="strategy-list"><li>Strong close beyond level (not just wick)</li><li>Increased volume on breakout</li><li>Follow-through in next candles</li><li>No immediate pullback into broken level</li></ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-title">Pullback Entries</div>
+                            <div class="strategy-subtitle">Trend Continuation</div>
+                            <div class="article-text" style="font-size: 0.95rem; margin-bottom: 0.75rem;">Wait for temporary moves against the trend, then enter when price resumes trend direction.</div>
+                            <ul class="strategy-list"><li>Clear trend structure established</li><li>Pullback to key support/resistance</li><li>Rejection signals at that level</li><li>Resumption of trend direction</li></ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-title">Failed Breakout Reversals</div>
+                            <div class="strategy-subtitle">Trap Reversals</div>
+                            <div class="article-text" style="font-size: 0.95rem; margin-bottom: 0.75rem;">Enter when price breaks through a level but immediately reverses back, trapping breakout traders.</div>
+                            <ul class="strategy-list"><li>Initial breakout appears legitimate</li><li>Quick reversal back through level</li><li>Strong momentum in reversal direction</li><li>Volume increases on reversal</li></ul>
+                        </div>
+                    </div>
+                    <div class="quote-box">
+                        <div class="quote-text">The market will teach you patience or separate you from your money.</div>
+                        <div class="quote-author">— Market Wisdom</div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="volume-confirmation">
+                    <h2 class="section-title">Volume: The Truth Serum of Price Action</h2>
+                    <p class="article-text"><strong>Volume never lies.</strong> While price can be manipulated, volume shows the true conviction behind price movements. Here's how to read volume with price action:</p>
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <div class="concept-title">Breakout Confirmation</div>
+                            <div class="concept-subtitle">Volume Validates Moves</div>
+                            <div class="concept-description">Valid breakouts are accompanied by increased volume, while false breakouts often occur on decreasing volume.</div>
+                            <div class="concept-detail"><strong>Valid Breakout:</strong> Price breaks resistance on 2x normal volume<br><strong>False Breakout:</strong> Price breaks resistance on below-average volume, quickly reverses</div>
+                        </div>
+                        <div class="concept-card">
+                            <div class="concept-title">Trend Health Check</div>
+                            <div class="concept-subtitle">Volume Shows Conviction</div>
+                            <div class="concept-description">Healthy trends show increasing volume on moves in trend direction and decreasing volume on pullbacks.</div>
+                            <div class="concept-detail"><strong>Healthy Uptrend:</strong> Higher volume on up days, lower volume on down days<br><strong>Weakening Trend:</strong> Decreasing volume on trend moves, increasing on pullbacks</div>
+                        </div>
+                    </div>
+                    <div class="example-box"><strong>Volume Validation Rules:</strong><br>For breakouts: volume should be at least 1.5x the recent average.<br>For trends: volume should increase on moves in trend direction.<br>For reversals: look for volume spikes at turning points.</div>
+                </div>
+
+                <div class="article-section" id="multiple-timeframes">
+                    <h2 class="section-title">Multiple Timeframe Price Action</h2>
+                    <p class="article-text">Professional price action traders use a three-timeframe approach to get complete market context:</p>
+                    <div class="timeframe-flow">
+                        <div class="timeframe-step"><div class="timeframe-step-title">Higher Timeframe</div><div class="timeframe-step-desc">Trend direction, major support/resistance</div></div>
+                        <div class="timeframe-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="timeframe-step"><div class="timeframe-step-title">Trading Timeframe</div><div class="timeframe-step-desc">Structure analysis, risk/reward measurement</div></div>
+                        <div class="timeframe-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="timeframe-step"><div class="timeframe-step-title">Lower Timeframe</div><div class="timeframe-step-desc">Precise timing, entry/exit signals</div></div>
+                    </div>
+                    <div class="example-box"><strong>Example Multi-Timeframe Analysis:</strong><br><strong>Daily Chart:</strong> Strong uptrend, price above all moving averages<br><strong>4-Hour Chart:</strong> Pullback to daily support, forming higher low<br><strong>1-Hour Chart:</strong> Hammer candle at support, breaking above hammer high<br><br><strong>Trade Decision:</strong> Long entry on 1-hour break with stop below 4-hour support</div>
+                </div>
+
+                <div class="article-section" id="common-mistakes">
+                    <h2 class="section-title">Common Price Action Mistakes</h2>
+                    <p class="article-text">Avoid these pitfalls that derail many price action traders:</p>
+                    <div class="mistake-grid">
+                        <div class="mistake-card"><div class="mistake-title">Overcomplicating Simple Setups</div><div class="mistake-desc">Adding unnecessary complexity to straightforward signals.</div><div class="mistake-fix">Solution: Trust simple, obvious patterns over complex interpretations.</div></div>
+                        <div class="mistake-card"><div class="mistake-title">Ignoring Market Structure</div><div class="mistake-desc">Taking setups against overall trend or structure.</div><div class="mistake-fix">Solution: Always consider the bigger picture first.</div></div>
+                        <div class="mistake-card"><div class="mistake-title">Forcing Patterns</div><div class="mistake-desc">Seeing patterns that don't really exist.</div><div class="mistake-fix">Solution: Be selective, only trade obvious, high-quality setups.</div></div>
+                        <div class="mistake-card"><div class="mistake-title">Poor Risk Management</div><div class="mistake-desc">Not using proper stops because "price action will tell me."</div><div class="mistake-fix">Solution: Always define risk before entering trades.</div></div>
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> The Biggest Trap</div>
+                        <p>The biggest mistake is trying to see patterns everywhere. Price action trading is about patience and selectivity. It's better to miss trades than to take poor setups based on wishful thinking.</p>
+                    </div>
+                </div>
+
+                <div class="takeaways" id="key-takeaways">
+                    <h3 class="takeaways-title"><i class="fas fa-bullseye"></i> Key Takeaways</h3>
+                    <ul class="takeaways-list">
+                        <li>Price action reads raw market data without indicators, showing what's actually happening</li>
+                        <li>Support and resistance based on actual price reactions, not mathematical formulas</li>
+                        <li>Market structure (swing highs/lows) reveals trend direction and buyer/seller control</li>
+                        <li>Confluence of multiple factors creates the highest probability trading setups</li>
+                        <li>Volume confirms price movements, breakouts need volume, trends need conviction</li>
+                        <li>Use multiple timeframes: higher for context, trading for structure, lower for timing</li>
+                        <li>Focus on high-quality, obvious setups over complex pattern interpretations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <nav class="article-navigation">
+                <a href="article-18.html" class="nav-btn prev"><i class="fas fa-arrow-left"></i> Article 18: Trends and Ranges</a>
+                <a href="article-20.html" class="nav-btn next">Article 20: Economic Calendar <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </main>
+
+        <aside class="article-sidebar">
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Your Progress</h4>
+                <div class="progress-circle"></div>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary);">Article 19 of 30<br>Reading raw charts!</p>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Previous Article</h4>
+                <a href="article-18.html" class="prev-article"><i class="fas fa-arrow-left"></i> Understanding Trends and Ranges</a>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Next Article</h4>
+                <a href="article-20.html" class="next-article">Economic Calendar <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const article = document.querySelector('.article-body');
+            const scrollTop = window.pageYOffset;
+            const docHeight = article.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) progressBar.style.width = Math.min(scrollPercent * 100, 100) + '%';
+            const backToTop = document.getElementById('backToTop');
+            if (scrollTop > 300) backToTop.classList.add('visible'); else backToTop.classList.remove('visible');
+        });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    </script>
 </body>
 </html>
