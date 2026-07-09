@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article 9: Support and Resistance - Finding Key Levels</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --light-bg-primary: #FFFFFF;
+            --light-bg-secondary: #F8FAFC;
+            --light-bg-tertiary: #F1F5F9;
+            --mint-bright: #34D399;
+            --mint-bright-hover: #10B981;
+            --baby-blue-bright: #60A5FA;
+            --baby-blue-bright-hover: #3B82F6;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #64748B;
+            --border-light: rgba(52, 211, 153, 0.3);
+            --border-subtle: rgba(15, 23, 42, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --shadow-light: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 40px rgba(52, 211, 153, 0.2);
+            --warning-bg: #FEF3C7;
+            --warning-border: #F59E0B;
+            --success-bg: #D1FAE5;
+            --success-border: #10B981;
+            --info-bg: #DBEAFE;
+            --info-border: #3B82F6;
+            --error-bg: #FEE2E2;
+            --error-border: #EF4444;
+            --purple-light: #E0E7FF;
+            --purple-border: #8B5CF6;
+            --support-color: #10B981;
+            --resistance-color: #EF4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: var(--mint-bright); }
+        .nav-cta { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-primary); cursor: pointer; }
+        .reading-progress { position: fixed; top: 4.5rem; left: 0; right: 0; height: 4px; background: var(--light-bg-tertiary); z-index: 999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); width: 0%; }
+        .article-layout { display: grid; grid-template-columns: 250px 1fr 200px; gap: 3rem; padding-top: 6rem; max-width: 1400px; margin: 0 auto; }
+        .article-nav { position: sticky; top: 6rem; height: fit-content; background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .article-nav h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-list { list-style: none; }
+        .nav-list li { margin-bottom: 0.5rem; }
+        .nav-list a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; display: block; padding: 0.25rem 0; }
+        .nav-list a:hover, .nav-list a.active { color: var(--mint-bright); }
+        .article-content { background: var(--light-bg-primary); border-radius: 12px; overflow: hidden; }
+        .article-header { background: linear-gradient(135deg, var(--light-bg-secondary) 0%, var(--light-bg-tertiary) 100%); padding: 3rem 2rem; text-align: center; border-bottom: 1px solid var(--border-subtle); }
+        .article-meta { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .meta-item { background: var(--glass-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; color: var(--text-secondary); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem; }
+        .article-number { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; font-weight: 600; }
+        .article-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+        .gradient-text { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+        .article-body { padding: 3rem 2rem; }
+        .article-section { margin-bottom: 3rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .article-text { font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .article-text strong { font-weight: 600; }
+        .callout { background: var(--glass-bg); border-left: 4px solid var(--mint-bright); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
+        .callout.warning { border-left-color: var(--warning-border); background: var(--warning-bg); }
+        .callout.success { border-left-color: var(--success-border); background: var(--success-bg); }
+        .callout.info { border-left-color: var(--info-border); background: var(--info-bg); }
+        .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .interactive-box { background: var(--glass-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .interactive-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .interactive-title i { color: var(--mint-bright); }
+        .sr-demo { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 2rem; margin: 2rem 0; }
+        .sr-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; text-align: center; }
+        .sr-examples { display: flex; justify-content: space-around; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .sr-example { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .sr-visual { position: relative; width: 120px; height: 150px; background: var(--light-bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; }
+        .resistance-line { position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: var(--resistance-color); }
+        .support-line { position: absolute; bottom: 20px; left: 0; right: 0; height: 2px; background: var(--support-color); }
+        .sr-label { font-size: 0.9rem; font-weight: 600; }
+        .sr-description { font-size: 0.8rem; color: var(--text-secondary); text-align: center; max-width: 140px; line-height: 1.4; }
+        .level-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .level-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .level-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .level-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
+        .level-card.horizontal .level-icon { background: linear-gradient(135deg, var(--mint-bright), var(--mint-bright-hover)); }
+        .level-card.diagonal .level-icon { background: linear-gradient(135deg, var(--baby-blue-bright), var(--baby-blue-bright-hover)); }
+        .level-card.dynamic .level-icon { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+        .level-card.psychological .level-icon { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .level-title { font-weight: 700; margin-bottom: 0.25rem; }
+        .level-subtitle { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+        .level-description { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem; }
+        .level-examples { background: var(--light-bg-tertiary); padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; }
+        .level-examples strong { color: var(--mint-bright); }
+        .strategies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .strategy-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 2rem; }
+        .strategy-header { text-align: center; margin-bottom: 1.5rem; }
+        .strategy-title { font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .strategy-type { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
+        .strategy-steps { list-style: none; }
+        .strategy-steps li { margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; line-height: 1.5; }
+        .strategy-steps li::before { content: attr(data-step); position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--mint-bright); color: white; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .mistakes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .mistake-card { background: var(--error-bg); border: 1px solid var(--error-border); border-radius: 10px; padding: 1.5rem; border-left: 4px solid var(--error-border); }
+        .mistake-title { font-weight: 600; color: var(--error-border); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .mistake-description { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        .advanced-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .advanced-card { background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%); border: 1px solid var(--purple-border); border-radius: 12px; padding: 1.5rem; }
+        .advanced-title { font-weight: 700; color: var(--purple-border); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .advanced-description { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        .takeaways { background: linear-gradient(135deg, rgba(52, 211, 153, 0.05) 0%, rgba(96, 165, 250, 0.05) 100%); border: 1px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 3rem 0; }
+        .takeaways-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .takeaways-title i { color: var(--mint-bright); }
+        .takeaways-list { list-style: none; }
+        .takeaways-list li { margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; }
+        .takeaways-list li::before { content: '✓'; position: absolute; left: 0; color: var(--mint-bright); }
+        .article-sidebar { position: sticky; top: 6rem; height: fit-content; }
+        .sidebar-widget { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .widget-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+        .progress-circle { width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--mint-bright) 0deg 108deg, var(--light-bg-tertiary) 108deg 360deg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; position: relative; }
+        .progress-circle::after { content: '30%'; position: absolute; font-size: 0.875rem; font-weight: 600; }
+        .next-article, .prev-article { padding: 1rem; border-radius: 8px; text-decoration: none; display: block; text-align: center; font-weight: 600; margin-bottom: 1rem; }
+        .next-article { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; }
+        .prev-article { background: var(--glass-bg); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1.2rem; opacity: 0; visibility: hidden; z-index: 1000; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .article-navigation { display: flex; justify-content: space-between; padding: 2rem; border-top: 1px solid var(--border-subtle); gap: 1rem; }
+        .nav-btn { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.5rem; text-decoration: none; color: var(--text-primary); font-weight: 500; flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .nav-btn.next { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; }
+        @media (max-width: 1024px) {
+            .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
+            .article-nav, .article-sidebar { display: none; }
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links, .nav-cta { display: none; }
+            .article-header { padding: 2rem 1.5rem; }
+            .article-title { font-size: 2.2rem; }
+            .article-body { padding: 2rem 1.5rem; }
+            .level-types, .strategies-grid, .mistakes-grid, .advanced-grid, .sr-examples { grid-template-columns: 1fr; }
+            .sr-examples { flex-direction: column; }
+            .article-navigation { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .article-title { font-size: 1.8rem; }
+            .article-body { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Mrs Atiqah</div>
+                <ul class="nav-links"><li><a href="index.html">Home</a></li></ul>
+                <a href="index.html" class="nav-cta">Article Index</a>
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="reading-progress"><div class="progress-fill" id="progressBar"></div></div>
+
+    <div class="article-layout">
+        <aside class="article-nav">
+            <h4>In This Article</h4>
+            <ul class="nav-list">
+                <li><a href="#introduction" class="active">Battlefield Maps</a></li>
+                <li><a href="#what-are-sr">What Are S&R?</a></li>
+                <li><a href="#why-exist">Why Do They Exist?</a></li>
+                <li><a href="#types">Types of Levels</a></li>
+                <li><a href="#identification">How to Identify</a></li>
+                <li><a href="#drawing-tips">Drawing Tips</a></li>
+                <li><a href="#trading-strategies">Trading Strategies</a></li>
+                <li><a href="#when-fail">When Levels Fail</a></li>
+                <li><a href="#mistakes">Common Mistakes</a></li>
+                <li><a href="#advanced">Advanced Concepts</a></li>
+                <li><a href="#key-takeaways">Key Takeaways</a></li>
+            </ul>
+        </aside>
+
+        <main class="article-content">
+            <header class="article-header">
+                <div class="article-meta">
+                    <div class="meta-item article-number">Article 9</div>
+                    <div class="meta-item"><i class="fas fa-book-open"></i> 9 min read</div>
+                    <div class="meta-item"><i class="fas fa-layer-group"></i> Key Levels</div>
+                </div>
+                <h1 class="article-title">Support and Resistance: <span class="gradient-text">Finding Key Levels</span></h1>
+                <p class="article-subtitle">Master the art of identifying where price is likely to bounce, break through, or stall out, your trading crystal ball for market battles.</p>
+            </header>
+
+            <div class="article-body">
+                <div class="article-section" id="introduction">
+                    <p class="article-text">If candlesticks are the market's diary, then support and resistance levels are the <strong>battlefield maps</strong>. These invisible lines on your chart mark the places where epic battles between buyers and sellers have been fought, and where future battles are likely to happen again.</p>
+                    <p class="article-text">Understanding support and resistance is like having a crystal ball that shows you where price is likely to bounce, break through, or stall out. It's one of the most fundamental concepts in technical analysis, yet many traders struggle to master it.</p>
+                    <div class="interactive-box">
+                        <div class="interactive-title"><i class="fas fa-map"></i> Your Trading Crystal Ball</div>
+                        <p>Today, we're going to demystify these crucial levels and teach you how to spot them like a seasoned trader.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="what-are-sr">
+                    <h2 class="section-title">What Are Support and Resistance?</h2>
+                    <p class="article-text">Think of support and resistance like invisible force fields around certain price levels.</p>
+                    <div class="sr-demo">
+                        <div class="sr-title">Support and Resistance Visualization</div>
+                        <div class="sr-examples">
+                            <div class="sr-example">
+                                <div class="sr-visual"><div class="resistance-line"></div><div class="support-line"></div></div>
+                                <div class="sr-label">Support Level</div>
+                                <div class="sr-description">Price level where buying interest is strong enough to prevent further declines, like a floor</div>
+                            </div>
+                            <div class="sr-example">
+                                <div class="sr-visual"><div class="resistance-line"></div><div class="support-line"></div></div>
+                                <div class="sr-label">Resistance Level</div>
+                                <div class="sr-description">Price level where selling pressure is strong enough to prevent further advances, like a ceiling</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="callout info">
+                        <div class="callout-title"><i class="fas fa-gavel"></i> The Auction Analogy</div>
+                        <p><strong>Support:</strong> Imagine an auction for a vintage guitar. Every time the bidding drops to $500, the same collector jumps in with a bid. That $500 level becomes "support."</p>
+                        <p style="margin-top: 1rem;"><strong>Resistance:</strong> If every time bidding reaches $800, people stop bidding, then $800 becomes "resistance," where supply consistently overwhelms demand.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="why-exist">
+                    <h2 class="section-title">Why Do Support and Resistance Exist?</h2>
+                    <p class="article-text">The psychology behind these levels is fascinating and very human:</p>
+                    <div class="level-types">
+                        <div class="level-card psychological">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-brain"></i></div><div><div class="level-title">Memory & Round Numbers</div><div class="level-subtitle">Human Psychology</div></div></div>
+                            <div class="level-description">People remember significant price levels. If Apple stock crashed from $180 to $120, investors who bought at $180 will want to "break even" if it gets back there.</div>
+                            <div class="level-examples"><strong>Our brains love round numbers:</strong> $50, $100, $150 often act as psychological support or resistance.</div>
+                        </div>
+                        <div class="level-card horizontal">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-building"></i></div><div><div class="level-title">Institutional Activity</div><div class="level-subtitle">Big Money Orders</div></div></div>
+                            <div class="level-description">Large institutions often have systematic rules about buying or selling at certain levels. Millions of dollars in orders cluster around specific prices.</div>
+                            <div class="level-examples"><strong>Examples:</strong> Pension funds, mutual funds, hedge funds with algorithmic trading rules.</div>
+                        </div>
+                        <div class="level-card dynamic">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-users"></i></div><div><div class="level-title">Technical Trader Behavior</div><div class="level-subtitle">Self-Fulfilling Prophecy</div></div></div>
+                            <div class="level-description">When thousands of traders see the same support/resistance levels, it becomes a self-fulfilling prophecy.</div>
+                            <div class="level-examples"><strong>The cycle:</strong> If everyone expects resistance at $100, many will sell there, actually creating resistance.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="types">
+                    <h2 class="section-title">Types of Support and Resistance</h2>
+                    <p class="article-text">Not all support and resistance levels are created equal:</p>
+                    <div class="level-types">
+                        <div class="level-card horizontal">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-minus"></i></div><div><div class="level-title">Horizontal S&R</div><div class="level-subtitle">Classic Levels</div></div></div>
+                            <div class="level-description">Straight horizontal lines where price has repeatedly bounced or stalled.</div>
+                            <div class="level-examples"><strong>Key insight:</strong> 2 touches = potentially significant, 3+ touches = definitely worth watching.</div>
+                        </div>
+                        <div class="level-card diagonal">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-chart-line"></i></div><div><div class="level-title">Diagonal S&R (Trend Lines)</div><div class="level-subtitle">Dynamic Levels</div></div></div>
+                            <div class="level-description">Angled lines connecting multiple swing highs or lows.</div>
+                            <div class="level-examples"><strong>Examples:</strong> Uptrend support, downtrend resistance.</div>
+                        </div>
+                        <div class="level-card dynamic">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-wave-square"></i></div><div><div class="level-title">Dynamic S&R (Moving Averages)</div><div class="level-subtitle">Moving Levels</div></div></div>
+                            <div class="level-description">Moving averages that act as support or resistance. Popular periods include 20, 50, and 200-day.</div>
+                            <div class="level-examples"><strong>Significance:</strong> 200-day is very significant, long-term.</div>
+                        </div>
+                        <div class="level-card psychological">
+                            <div class="level-header"><div class="level-icon"><i class="fas fa-hashtag"></i></div><div><div class="level-title">Psychological Levels</div><div class="level-subtitle">Round Numbers</div></div></div>
+                            <div class="level-description">Round numbers and significant price milestones due to human psychology.</div>
+                            <div class="level-examples"><strong>Examples:</strong> $50, $100, previous all-time highs, 52-week highs/lows.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="identification">
+                    <h2 class="section-title">How to Identify Support and Resistance Levels</h2>
+                    <p class="article-text">Identifying these levels is part science, part art:</p>
+                    <div class="strategies-grid">
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">Swing High/Low Method</div><div class="strategy-type">Most Basic & Reliable</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="1"><strong>For Resistance:</strong> Look for previous peaks where price reversed downward.</li>
+                                <li data-step="2"><strong>For Support:</strong> Look for previous troughs where price reversed upward.</li>
+                                <li data-step="3"><strong>Pro tip:</strong> You don't need exact precision. Just draw your line around the zone.</li>
+                            </ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">Multiple Touch Rule</div><div class="strategy-type">Strength Assessment</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="2"><strong>2 touches:</strong> Potentially significant level worth monitoring</li>
+                                <li data-step="3"><strong>3 touches:</strong> Definitely worth watching, strong level</li>
+                                <li data-step="4"><strong>4+ touches:</strong> Very strong level, major significance</li>
+                            </ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">Time & Volume Factors</div><div class="strategy-type">Confirmation Methods</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="⏰"><strong>Time Factor:</strong> Older levels can still be significant, especially major turning points</li>
+                                <li data-step="📊"><strong>Volume Confirmation:</strong> Levels are more reliable when they coincide with high volume</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="drawing-tips">
+                    <h2 class="section-title">Practical Tips for Drawing Levels</h2>
+                    <div class="level-types">
+                        <div class="level-card horizontal"><div class="level-header"><div class="level-icon"><i class="fas fa-eye"></i></div><div class="level-title">Don't Over-Complicate</div></div><div class="level-description">Start by marking only the most obvious levels. If you have to squint to see it, it's probably not significant.</div></div>
+                        <div class="level-card diagonal"><div class="level-header"><div class="level-icon"><i class="fas fa-ruler-combined"></i></div><div class="level-title">Use Wicks & Bodies</div></div><div class="level-description">Consider both candlestick bodies and wicks. Sometimes the wicks show where the real battle happened.</div></div>
+                        <div class="level-card dynamic"><div class="level-header"><div class="level-icon"><i class="fas fa-expand-arrows-alt"></i></div><div class="level-title">Think in Zones</div></div><div class="level-description">Support and resistance are rarely exact prices. Think of them as zones.</div></div>
+                        <div class="level-card psychological"><div class="level-header"><div class="level-icon"><i class="fas fa-layer-group"></i></div><div class="level-title">Different Timeframes</div></div><div class="level-description">A level that's resistance on a daily chart might not show up on a weekly chart.</div></div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="trading-strategies">
+                    <h2 class="section-title">Trading with Support and Resistance</h2>
+                    <p class="article-text">Now for the practical part, three proven strategies:</p>
+                    <div class="strategies-grid">
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">The Bounce Play</div><div class="strategy-type">Mean Reversion Strategy</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="📋"><strong>Setup:</strong> Price approaches a well-established level</li>
+                                <li data-step="🎯"><strong>Entry:</strong> Buy near support or sell near resistance</li>
+                                <li data-step="🛑"><strong>Stop Loss:</strong> Just beyond the level</li>
+                                <li data-step="🎁"><strong>Target:</strong> Previous swing high or low</li>
+                            </ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">The Breakout Play</div><div class="strategy-type">Momentum Strategy</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="📋"><strong>Setup:</strong> Price breaks through significant level with conviction</li>
+                                <li data-step="🎯"><strong>Entry:</strong> Buy on breaks above resistance or sell on breaks below support</li>
+                                <li data-step="🛑"><strong>Stop Loss:</strong> Back inside the broken level</li>
+                                <li data-step="🎁"><strong>Target:</strong> Next significant level</li>
+                            </ul>
+                        </div>
+                        <div class="strategy-card">
+                            <div class="strategy-header"><div class="strategy-title">The Retest Strategy</div><div class="strategy-type">Confirmation Strategy</div></div>
+                            <ul class="strategy-steps">
+                                <li data-step="📋"><strong>Setup:</strong> After breakout, price returns to retest the broken level</li>
+                                <li data-step="🎯"><strong>Entry:</strong> Enter in breakout direction when price holds the level</li>
+                                <li data-step="🛑"><strong>Stop Loss:</strong> If the retest fails</li>
+                                <li data-step="🎁"><strong>Target:</strong> Next significant level in breakout direction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="when-fail">
+                    <h2 class="section-title">When Support and Resistance Levels Fail</h2>
+                    <p class="article-text">Understanding what happens when levels break is just as important as identifying them:</p>
+                    <div class="callout success">
+                        <div class="callout-title"><i class="fas fa-arrows-alt-v"></i> Role Reversal, The Most Important Concept</div>
+                        <p><strong>Broken support becomes resistance, and broken resistance becomes support.</strong></p>
+                        <p style="margin-top: 1rem;">If a stock breaks below support at $100, that level often becomes resistance if price rallies back up.</p>
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> False Breakouts</div>
+                        <p>Sometimes price will briefly break through only to reverse quickly back inside the range. These can trap traders.</p>
+                        <p style="margin-top: 1rem;"><strong>How to avoid:</strong> Wait for a close beyond the level, look for volume confirmation.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="mistakes">
+                    <h2 class="section-title">Common Mistakes When Using Support and Resistance</h2>
+                    <div class="mistakes-grid">
+                        <div class="mistake-card"><div class="mistake-title"><i class="fas fa-exclamation-triangle"></i> Drawing Too Many Lines</div><div class="mistake-description">Cluttering your chart makes it hard to see what's important. Focus on the most obvious levels.</div></div>
+                        <div class="mistake-card"><div class="mistake-title"><i class="fas fa-exclamation-triangle"></i> Ignoring the Bigger Picture</div><div class="mistake-description">A minor level on a 1-hour chart might be meaningless next to major resistance on the daily chart.</div></div>
+                        <div class="mistake-card"><div class="mistake-title"><i class="fas fa-exclamation-triangle"></i> Treating Levels as Gospel</div><div class="mistake-description">Support and resistance are guides, not guarantees. Markets can break through any level eventually.</div></div>
+                        <div class="mistake-card"><div class="mistake-title"><i class="fas fa-exclamation-triangle"></i> Not Considering Market Context</div><div class="mistake-description">A support level that's held for months might break during a major market crash.</div></div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="advanced">
+                    <h2 class="section-title">Advanced Concepts</h2>
+                    <div class="advanced-grid">
+                        <div class="advanced-card"><div class="advanced-title"><i class="fas fa-crosshairs"></i> Confluence Levels</div><div class="advanced-description">The most powerful levels are where multiple factors converge: horizontal level + 200-day moving average, or swing high + Fibonacci retracement + round number.</div></div>
+                        <div class="advanced-card"><div class="advanced-title"><i class="fas fa-chart-area"></i> Volume Profile</div><div class="advanced-description">Shows volume traded at each price level. High-volume areas often act as support or resistance.</div></div>
+                        <div class="advanced-card"><div class="advanced-title"><i class="fas fa-building"></i> Market Structure</div><div class="advanced-description">In trending markets, look for higher lows (uptrends) or lower highs (downtrends).</div></div>
+                    </div>
+                    <div class="callout info">
+                        <div class="callout-title"><i class="fas fa-dumbbell"></i> Building Your Skills</div>
+                        <p><strong>Daily Practice:</strong> Spend time each day marking key levels on charts.<br><strong>Historical Analysis:</strong> Go back in time and see how well levels held up.<br><strong>Keep a Level Journal:</strong> Track key levels and how they perform.</p>
+                    </div>
+                </div>
+
+                <div class="takeaways" id="key-takeaways">
+                    <h3 class="takeaways-title"><i class="fas fa-bullseye"></i> Key Takeaways</h3>
+                    <ul class="takeaways-list">
+                        <li>Support and resistance levels mark where battles between buyers and sellers have occurred</li>
+                        <li>These levels exist due to human psychology, institutional activity, and technical trader behavior</li>
+                        <li>Four main types: horizontal, diagonal (trend lines), dynamic (moving averages), and psychological</li>
+                        <li>The more times a level is tested, the stronger it becomes</li>
+                        <li>Think in zones rather than exact price lines</li>
+                        <li>Volume confirmation makes levels more reliable and significant</li>
+                        <li>Three main trading strategies: bounce plays, breakout plays, and retest strategies</li>
+                        <li>Broken support becomes resistance, and broken resistance becomes support (role reversal)</li>
+                        <li>Don't over-complicate, focus on the most obvious, well-tested levels first</li>
+                        <li>Confluence levels (where multiple factors converge) are the most powerful</li>
+                    </ul>
+                </div>
+            </div>
+
+            <nav class="article-navigation">
+                <a href="article-8.html" class="nav-btn prev"><i class="fas fa-arrow-left"></i> Article 8: Dealing with Losses</a>
+                <a href="article-10.html" class="nav-btn next">Article 10: Emotional Triggers <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </main>
+
+        <aside class="article-sidebar">
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Your Progress</h4>
+                <div class="progress-circle"></div>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary);">Article 9 of 30<br>Mastering key levels!</p>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Previous Article</h4>
+                <a href="article-8.html" class="prev-article"><i class="fas fa-arrow-left"></i> Dealing with Trading Losses</a>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Next Article</h4>
+                <a href="article-10.html" class="next-article">Emotional Triggers in Trading <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const article = document.querySelector('.article-body');
+            const scrollTop = window.pageYOffset;
+            const docHeight = article.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) progressBar.style.width = Math.min(scrollPercent * 100, 100) + '%';
+            const backToTop = document.getElementById('backToTop');
+            if (scrollTop > 300) backToTop.classList.add('visible'); else backToTop.classList.remove('visible');
+        });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    </script>
+</body>
+</html>
