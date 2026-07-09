@@ -1,9 +1,401 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article 24: Building Trading Confidence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --light-bg-primary: #FFFFFF;
+            --light-bg-secondary: #F8FAFC;
+            --light-bg-tertiary: #F1F5F9;
+            --mint-bright: #34D399;
+            --mint-bright-hover: #10B981;
+            --baby-blue-bright: #60A5FA;
+            --baby-blue-bright-hover: #3B82F6;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #64748B;
+            --border-light: rgba(52, 211, 153, 0.3);
+            --border-subtle: rgba(15, 23, 42, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --shadow-light: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 40px rgba(52, 211, 153, 0.2);
+            --warning-bg: #FEF3C7;
+            --warning-border: #F59E0B;
+            --success-bg: #D1FAE5;
+            --success-border: #10B981;
+            --info-bg: #DBEAFE;
+            --info-border: #3B82F6;
+            --error-bg: #FEE2E2;
+            --error-border: #EF4444;
+            --purple-light: #E0E7FF;
+            --purple-border: #8B5CF6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); z-index: 1000; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: var(--mint-bright); }
+        .nav-cta { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-primary); cursor: pointer; }
+        .reading-progress { position: fixed; top: 4.5rem; left: 0; right: 0; height: 4px; background: var(--light-bg-tertiary); z-index: 999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); width: 0%; }
+        .article-layout { display: grid; grid-template-columns: 250px 1fr 200px; gap: 3rem; padding-top: 6rem; max-width: 1400px; margin: 0 auto; }
+        .article-nav { position: sticky; top: 6rem; height: fit-content; background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .article-nav h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-list { list-style: none; }
+        .nav-list li { margin-bottom: 0.5rem; }
+        .nav-list a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; display: block; padding: 0.25rem 0; }
+        .nav-list a:hover, .nav-list a.active { color: var(--mint-bright); }
+        .article-content { background: var(--light-bg-primary); border-radius: 12px; overflow: hidden; }
+        .article-header { background: linear-gradient(135deg, var(--light-bg-secondary) 0%, var(--light-bg-tertiary) 100%); padding: 3rem 2rem; text-align: center; border-bottom: 1px solid var(--border-subtle); }
+        .article-meta { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .meta-item { background: var(--glass-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; color: var(--text-secondary); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem; }
+        .article-number { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; font-weight: 600; }
+        .article-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+        .gradient-text { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+        .article-body { padding: 3rem 2rem; }
+        .article-section { margin-bottom: 3rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .article-text { font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .article-text strong { font-weight: 600; }
+        .article-text em { color: var(--mint-bright); font-style: italic; font-weight: 500; }
+        .callout { background: var(--glass-bg); border-left: 4px solid var(--mint-bright); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
+        .callout.warning { border-left-color: var(--warning-border); background: var(--warning-bg); }
+        .callout.success { border-left-color: var(--success-border); background: var(--success-bg); }
+        .callout.info { border-left-color: var(--info-border); background: var(--info-bg); }
+        .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .interactive-box { background: var(--glass-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .interactive-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .interactive-title i { color: var(--mint-bright); }
+        .quote-box { background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%); border: 1px solid var(--purple-border); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .quote-text { font-size: 1.1rem; font-style: italic; margin-bottom: 1rem; }
+        .quote-author { font-size: 0.9rem; color: var(--purple-border); font-weight: 600; }
+        .trait-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .trait-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .trait-title { font-weight: 700; margin-bottom: 0.25rem; }
+        .trait-subtitle { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem; }
+        .trait-description { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .trait-list { list-style: none; }
+        .trait-list li { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.35rem; padding-left: 1.25rem; position: relative; }
+        .trait-list li::before { content: '•'; position: absolute; left: 0; color: var(--mint-bright); }
+        .killer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .killer-card { background: var(--error-bg); border: 1px solid var(--error-border); border-radius: 12px; padding: 1.5rem; border-left: 4px solid var(--error-border); }
+        .killer-title { font-weight: 700; color: var(--error-border); margin-bottom: 0.25rem; }
+        .killer-subtitle { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem; }
+        .killer-description { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .killer-list { list-style: none; }
+        .killer-list li { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.35rem; padding-left: 1.25rem; position: relative; }
+        .killer-list li::before { content: '✗'; position: absolute; left: 0; color: var(--error-border); }
+        .blocks-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .block-step { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .block-number { display: inline-block; width: 32px; height: 32px; background: var(--mint-bright); color: white; border-radius: 50%; line-height: 32px; font-weight: 700; margin-bottom: 0.75rem; }
+        .block-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .block-description { font-size: 0.85rem; color: var(--text-secondary); }
+        .practice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .practice-card { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; }
+        .practice-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .practice-description { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .practice-note { font-size: 0.85rem; color: var(--mint-bright); font-style: italic; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .comparison-card { padding: 1.5rem; border-radius: 12px; }
+        .comparison-card.bad { background: var(--error-bg); border: 1px solid var(--error-border); }
+        .comparison-card.good { background: var(--success-bg); border: 1px solid var(--success-border); }
+        .comparison-title { font-weight: 700; margin-bottom: 1rem; }
+        .comparison-card.bad .comparison-title { color: var(--error-border); }
+        .comparison-card.good .comparison-title { color: var(--success-border); }
+        .comparison-card ul { list-style: none; }
+        .comparison-card li { margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; }
+        .comparison-card.bad li::before { content: '✗'; position: absolute; left: 0; color: var(--error-border); font-weight: bold; }
+        .comparison-card.good li::before { content: '✓'; position: absolute; left: 0; color: var(--success-border); font-weight: bold; }
+        .action-plan { background: linear-gradient(135deg, var(--light-bg-secondary) 0%, var(--light-bg-primary) 100%); border: 2px solid var(--border-light); border-radius: 15px; padding: 2rem; margin: 2.5rem 0; border-left: 6px solid var(--mint-bright); }
+        .action-plan h3 { color: var(--mint-bright); margin-bottom: 1.5rem; font-size: 1.3rem; }
+        .action-plan ul { list-style: none; padding: 0; }
+        .action-plan li { position: relative; margin-bottom: 0.85rem; padding-left: 2rem; }
+        .action-plan li::before { content: "✓"; position: absolute; left: 0; color: var(--success-border); font-weight: bold; }
+        .takeaways { background: linear-gradient(135deg, rgba(52, 211, 153, 0.05) 0%, rgba(96, 165, 250, 0.05) 100%); border: 1px solid var(--border-light); border-radius: 12px; padding: 2rem; margin: 3rem 0; }
+        .takeaways-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .takeaways-title i { color: var(--mint-bright); }
+        .takeaways-list { list-style: none; }
+        .takeaways-list li { margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; }
+        .takeaways-list li::before { content: '✓'; position: absolute; left: 0; color: var(--mint-bright); }
+        .article-sidebar { position: sticky; top: 6rem; height: fit-content; }
+        .sidebar-widget { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .widget-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+        .progress-circle { width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--mint-bright) 0deg 288deg, var(--light-bg-tertiary) 288deg 360deg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; position: relative; }
+        .progress-circle::after { content: '80%'; position: absolute; font-size: 0.875rem; font-weight: 600; }
+        .next-article, .prev-article { padding: 1rem; border-radius: 8px; text-decoration: none; display: block; text-align: center; font-weight: 600; margin-bottom: 1rem; }
+        .next-article { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; }
+        .prev-article { background: var(--glass-bg); border: 1px solid var(--border-subtle); color: var(--text-primary); }
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1.2rem; opacity: 0; visibility: hidden; z-index: 1000; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .article-navigation { display: flex; justify-content: space-between; padding: 2rem; border-top: 1px solid var(--border-subtle); gap: 1rem; }
+        .nav-btn { background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.5rem; text-decoration: none; color: var(--text-primary); font-weight: 500; flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .nav-btn.next { background: linear-gradient(135deg, var(--mint-bright) 0%, var(--baby-blue-bright) 100%); color: white; border: none; }
+        @media (max-width: 1024px) {
+            .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
+            .article-nav, .article-sidebar { display: none; }
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links, .nav-cta { display: none; }
+            .article-header { padding: 2rem 1.5rem; }
+            .article-title { font-size: 2.2rem; }
+            .article-body { padding: 2rem 1.5rem; }
+            .trait-grid, .killer-grid, .practice-grid, .comparison-grid { grid-template-columns: 1fr; }
+            .article-navigation { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .article-title { font-size: 1.8rem; }
+            .article-body { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
 <body>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Mrs Atiqah</div>
+                <ul class="nav-links"><li><a href="index.html">Home</a></li></ul>
+                <a href="index.html" class="nav-cta">Article Index</a>
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
 
-<h1>Coming Soon</h1>
+    <div class="reading-progress"><div class="progress-fill" id="progressBar"></div></div>
 
+    <div class="article-layout">
+        <aside class="article-nav">
+            <h4>In This Article</h4>
+            <ul class="nav-list">
+                <li><a href="#introduction" class="active">The Confidence Crisis</a></li>
+                <li><a href="#what-confidence-looks-like">What Real Confidence Looks Like</a></li>
+                <li><a href="#confidence-killers">Confidence Killers</a></li>
+                <li><a href="#building-blocks">Building Blocks</a></li>
+                <li><a href="#daily-practices">Daily Practices</a></li>
+                <li><a href="#confidence-vs-overconfidence">Confidence vs Overconfidence</a></li>
+                <li><a href="#maintaining-confidence">Maintaining Confidence</a></li>
+                <li><a href="#key-takeaways">Key Takeaways</a></li>
+            </ul>
+        </aside>
 
+        <main class="article-content">
+            <header class="article-header">
+                <div class="article-meta">
+                    <div class="meta-item article-number">Article 24</div>
+                    <div class="meta-item"><i class="fas fa-book-open"></i> 13 min read</div>
+                    <div class="meta-item"><i class="fas fa-brain"></i> Trading Psychology</div>
+                </div>
+                <h1 class="article-title">Building Trading Confidence: <span class="gradient-text">From Self-Doubt to Unshakeable Belief</span></h1>
+                <p class="article-subtitle">Transform nervous hesitation into calm conviction and develop the confidence that separates profitable traders from the rest.</p>
+            </header>
+
+            <div class="article-body">
+                <div class="article-section" id="introduction">
+                    <p class="article-text">Your finger hovers over the "buy" button. The setup looks perfect, your analysis is solid, but something holds you back. <em>What if I'm wrong? What if I lose money? What if I'm just not cut out for this?</em></p>
+                    <p class="article-text">Welcome to trading's biggest paradox: the market rewards confidence, but trading constantly challenges it. <strong>Every successful trader has stood where you're standing right now</strong>, paralyzed by self-doubt and second-guessing every decision.</p>
+                    <p class="article-text">Here's what they discovered: confidence isn't something you're born with. It's a skill you build, brick by brick, trade by trade. And once you understand how to build genuine trading confidence, everything changes.</p>
+                    <div class="interactive-box">
+                        <div class="interactive-title"><i class="fas fa-calculator"></i> The Confidence Equation</div>
+                        <p style="font-weight: 600; font-size: 1.05rem;">Trading Confidence = Competence + Experience + Self-Trust</p>
+                        <p style="margin-top: 1rem;">Master each element, and confidence follows naturally.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="what-confidence-looks-like">
+                    <h2 class="section-title">What Real Trading Confidence Looks Like</h2>
+                    <p class="article-text">Before we build confidence, we need to recognize what we're building toward. Real trading confidence isn't loud or flashy, it's quiet strength that shows up in your actions.</p>
+                    <div class="trait-grid">
+                        <div class="trait-card">
+                            <div class="trait-title">Calm Execution</div>
+                            <div class="trait-subtitle">Grace Under Pressure</div>
+                            <div class="trait-description">Confident traders execute their plans without hesitation, regardless of market conditions or recent performance.</div>
+                            <ul class="trait-list"><li>Takes trades that meet their criteria</li><li>Cuts losses without emotional drama</li><li>Maintains steady position sizing</li><li>Stays patient during drawdowns</li></ul>
+                        </div>
+                        <div class="trait-card">
+                            <div class="trait-title">Emotional Stability</div>
+                            <div class="trait-subtitle">Neither High nor Low</div>
+                            <div class="trait-description">They don't get overly excited by wins or devastated by losses. They maintain emotional equilibrium.</div>
+                            <ul class="trait-list"><li>Treats wins and losses equally</li><li>Focuses on process over outcomes</li><li>Maintains perspective during streaks</li><li>Recovers quickly from setbacks</li></ul>
+                        </div>
+                        <div class="trait-card">
+                            <div class="trait-title">Self-Trust</div>
+                            <div class="trait-subtitle">Inner Guidance System</div>
+                            <div class="trait-description">They trust their analysis, their rules, and their ability to handle whatever the market throws at them.</div>
+                            <ul class="trait-list"><li>Relies on their own analysis</li><li>Doesn't second-guess every decision</li><li>Makes decisions quickly and cleanly</li><li>Learns from mistakes without self-attack</li></ul>
+                        </div>
+                    </div>
+                    <div class="callout info">
+                        <div class="callout-title"><i class="fas fa-lightbulb"></i> Confidence Check</div>
+                        <p>Real confidence whispers while insecurity shouts. If you find yourself needing to convince others (or yourself) of your trading abilities, you're likely compensating for lack of genuine confidence.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="confidence-killers">
+                    <h2 class="section-title">The Silent Confidence Killers</h2>
+                    <p class="article-text">Understanding what destroys confidence is just as important as knowing what builds it. These common behaviors slowly erode your trading confidence without you realizing it.</p>
+                    <div class="killer-grid">
+                        <div class="killer-card">
+                            <div class="killer-title">Comparison Addiction</div>
+                            <div class="killer-subtitle">The Confidence Vampire</div>
+                            <div class="killer-description">Constantly comparing your results to other traders' highlight reels destroys your confidence from within.</div>
+                            <ul class="killer-list"><li>Following "guru" social media accounts</li><li>Obsessing over others' profit screenshots</li><li>Changing strategies based on others' success</li></ul>
+                        </div>
+                        <div class="killer-card">
+                            <div class="killer-title">Perfectionism Trap</div>
+                            <div class="killer-subtitle">The Paralysis Producer</div>
+                            <div class="killer-description">Demanding perfection sets impossible standards and guarantees confidence-crushing disappointment.</div>
+                            <ul class="killer-list"><li>Expecting every trade to be profitable</li><li>Beating yourself up over losses</li><li>Refusing to trade unless setup is "perfect"</li></ul>
+                        </div>
+                        <div class="killer-card">
+                            <div class="killer-title">Instant Gratification</div>
+                            <div class="killer-subtitle">The Patience Poison</div>
+                            <div class="killer-description">Expecting immediate results and quick profits undermines the slow confidence-building process.</div>
+                            <ul class="killer-list"><li>Wanting to get rich quick</li><li>Switching strategies after a few losses</li><li>Abandoning plans at the first obstacle</li></ul>
+                        </div>
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title"><i class="fas fa-shield-alt"></i> Confidence Protection</div>
+                        <p>The best defense against confidence killers is awareness. When you catch yourself in these patterns, gently redirect your focus back to your own journey and process.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="building-blocks">
+                    <h2 class="section-title">The Four Building Blocks of Trading Confidence</h2>
+                    <p class="article-text">Confidence isn't built overnight, but it follows a predictable pattern. These four building blocks create the foundation for unshakeable trading confidence.</p>
+                    <div class="blocks-flow">
+                        <div class="block-step"><div class="block-number">1</div><div class="block-title">Competence</div><div class="block-description">Master the fundamentals of trading analysis, risk management, and market mechanics through education and practice.</div></div>
+                        <div class="block-step"><div class="block-number">2</div><div class="block-title">Small Wins</div><div class="block-description">Start with small position sizes and achievable goals to build a foundation of positive experiences.</div></div>
+                        <div class="block-step"><div class="block-number">3</div><div class="block-title">System Trust</div><div class="block-description">Develop and test a trading system until you have complete faith in its long-term edge and effectiveness.</div></div>
+                        <div class="block-step"><div class="block-number">4</div><div class="block-title">Self-Proof</div><div class="block-description">Accumulate evidence of your ability to follow your plan, manage risk, and handle both wins and losses professionally.</div></div>
+                    </div>
+                    <div class="quote-box">
+                        <div class="quote-text">Confidence comes not from always being right, but from knowing you can handle being wrong.</div>
+                        <div class="quote-author">— Mark Douglas, Trading in the Zone</div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="daily-practices">
+                    <h2 class="section-title">Daily Confidence-Building Practices</h2>
+                    <p class="article-text">Like physical fitness, trading confidence requires consistent daily practice. These exercises build confidence systematically over time.</p>
+                    <div class="practice-grid">
+                        <div class="practice-card"><div class="practice-title">Morning Preparation</div><div class="practice-description">Start each trading day by reviewing your plan, setting clear intentions, and affirming your capabilities.</div><div class="practice-note">Confidence starts before the markets open.</div></div>
+                        <div class="practice-card"><div class="practice-title">Trade Journal Success</div><div class="practice-description">Keep a detailed record of what you do well, not just mistakes. Celebrate following your plan regardless of outcome.</div><div class="practice-note">Your brain needs proof of competence.</div></div>
+                        <div class="practice-card"><div class="practice-title">Progressive Challenges</div><div class="practice-description">Gradually increase position sizes and take on slightly more challenging setups as your competence grows.</div><div class="practice-note">Confidence grows when you handle bigger challenges.</div></div>
+                        <div class="practice-card"><div class="practice-title">Skill Development</div><div class="practice-description">Dedicate time daily to improving one specific aspect of your trading through study, practice, or analysis.</div><div class="practice-note">Growing competence naturally builds confidence.</div></div>
+                        <div class="practice-card"><div class="practice-title">Mental Rehearsal</div><div class="practice-description">Visualize yourself executing trades calmly and professionally, handling both wins and losses with grace.</div><div class="practice-note">Your brain can't distinguish imagined from real experiences.</div></div>
+                        <div class="practice-card"><div class="practice-title">Evening Review</div><div class="practice-description">End each day by acknowledging what you did well and setting positive intentions for tomorrow.</div><div class="practice-note">Confidence is built one day at a time.</div></div>
+                    </div>
+                </div>
+
+                <div class="article-section" id="confidence-vs-overconfidence">
+                    <h2 class="section-title">The Fine Line: Confidence vs. Overconfidence</h2>
+                    <p class="article-text">The market rewards confidence but punishes overconfidence. Understanding the difference keeps you on the profitable side of this crucial distinction.</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-card bad">
+                            <div class="comparison-title">Dangerous Overconfidence</div>
+                            <ul><li>Taking bigger risks after wins</li><li>Ignoring risk management rules</li><li>Believing you can't lose</li><li>Abandoning tested strategies</li><li>Making impulsive decisions</li><li>Dismissing market warnings</li></ul>
+                        </div>
+                        <div class="comparison-card good">
+                            <div class="comparison-title">Healthy Trading Confidence</div>
+                            <ul><li>Consistent position sizing regardless of results</li><li>Strict adherence to risk management</li><li>Accepting that losses are inevitable</li><li>Sticking with proven strategies</li><li>Making planned, deliberate decisions</li><li>Respecting market uncertainty</li></ul>
+                        </div>
+                    </div>
+                    <div class="callout warning">
+                        <div class="callout-title"><i class="fas fa-thermometer-half"></i> The Confidence Thermometer</div>
+                        <p>Check your confidence temperature regularly. If you find yourself taking bigger risks or feeling invincible, you may have crossed from confidence into dangerous overconfidence territory.</p>
+                    </div>
+                </div>
+
+                <div class="article-section" id="maintaining-confidence">
+                    <h2 class="section-title">Maintaining Long-Term Confidence</h2>
+                    <p class="article-text">Building confidence is only half the battle. The real challenge is maintaining it through inevitable drawdowns, market changes, and the natural ups and downs of trading.</p>
+                    <div class="trait-grid">
+                        <div class="trait-card"><div class="trait-title">Stay Process-Focused</div><div class="trait-subtitle">Control What You Control</div><div class="trait-description">Base your confidence on following your process perfectly, not on market outcomes you can't control. A perfectly executed losing trade builds confidence; a lucky winning trade without following rules erodes it.</div></div>
+                        <div class="trait-card"><div class="trait-title">Continuous Learning</div><div class="trait-subtitle">Growing Competence</div><div class="trait-description">Keep improving your skills and knowledge. Confidence rooted in growing competence is unshakeable. Dedicate 30 minutes daily to learning something new.</div></div>
+                        <div class="trait-card"><div class="trait-title">Supportive Community</div><div class="trait-subtitle">Positive Reinforcement</div><div class="trait-description">Surround yourself with other serious traders who support your growth and hold you accountable. Find mentors who model the confidence you want to develop.</div></div>
+                    </div>
+                    <div class="callout success">
+                        <div class="callout-title"><i class="fas fa-dumbbell"></i> Confidence Maintenance</div>
+                        <p>Confidence is like a muscle, it needs regular exercise to stay strong. Daily practices, continuous learning, and process focus keep your trading confidence in peak condition.</p>
+                    </div>
+                </div>
+
+                <div class="takeaways" id="key-takeaways">
+                    <h3 class="takeaways-title"><i class="fas fa-bullseye"></i> Key Takeaways</h3>
+                    <ul class="takeaways-list">
+                        <li>Real confidence is quiet strength that shows up as calm execution and emotional stability</li>
+                        <li>Confidence killers include comparison addiction, perfectionism, and instant gratification expectations</li>
+                        <li>Build confidence through the four blocks: competence, small wins, system trust, and self-proof</li>
+                        <li>Daily practices like morning prep, journaling successes, and mental rehearsal build confidence systematically</li>
+                        <li>Overconfidence is dangerous, maintain consistent position sizing and risk management regardless of recent results</li>
+                        <li>Base confidence on following your process perfectly, not on market outcomes you can't control</li>
+                        <li>Maintain long-term confidence through continuous learning and supportive community</li>
+                    </ul>
+                </div>
+
+                <div class="action-plan">
+                    <h3>Your Confidence Building Action Plan</h3>
+                    <ul>
+                        <li>Start a "wins journal" documenting everything you do well, not just profitable trades</li>
+                        <li>Begin with micro-position sizes to build a foundation of successful experiences</li>
+                        <li>Create and test a simple trading system until you have complete faith in its edge</li>
+                        <li>Establish a daily morning routine to prepare mentally for trading</li>
+                        <li>Practice mental rehearsal, visualize yourself executing trades with perfect discipline</li>
+                        <li>Set process-based goals rather than profit-based goals for the next month</li>
+                        <li>Find one supportive trading community focused on education over profit bragging</li>
+                        <li>Create a "confidence thermometer" check to monitor overconfidence tendencies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <nav class="article-navigation">
+                <a href="article-23.html" class="nav-btn prev"><i class="fas fa-arrow-left"></i> Article 23: Market Volatility</a>
+                <a href="article-25.html" class="nav-btn next">Article 25: Position Sizing Strategies <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </main>
+
+        <aside class="article-sidebar">
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Your Progress</h4>
+                <div class="progress-circle"></div>
+                <p style="text-align: center; font-size: 0.9rem; color: var(--text-secondary);">Article 24 of 30<br>Building unshakeable belief!</p>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Previous Article</h4>
+                <a href="article-23.html" class="prev-article"><i class="fas fa-arrow-left"></i> Trading During Market Volatility</a>
+            </div>
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Next Article</h4>
+                <a href="article-25.html" class="next-article">Position Sizing Strategies <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const article = document.querySelector('.article-body');
+            const scrollTop = window.pageYOffset;
+            const docHeight = article.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) progressBar.style.width = Math.min(scrollPercent * 100, 100) + '%';
+            const backToTop = document.getElementById('backToTop');
+            if (scrollTop > 300) backToTop.classList.add('visible'); else backToTop.classList.remove('visible');
+        });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    </script>
 </body>
 </html>
