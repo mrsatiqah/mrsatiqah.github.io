@@ -256,16 +256,13 @@
     transform:translateY(-6px); border-color:rgba(60,202,172,0.4);
     box-shadow:0 20px 40px var(--shadow-soft);
   }
-  .tool-card.has-image{padding:0; overflow:hidden;}
-  .tool-thumb{width:100%; height:170px; object-fit:cover; display:block;}
-  .tool-card-content{padding:26px 30px 30px; display:flex; flex-direction:column; gap:18px; flex-grow:1;}
   .tool-icon{
-    width:52px; height:52px; border-radius:14px;
+    width:76px; height:76px; border-radius:18px;
     display:flex; align-items:center; justify-content:center;
     background:rgba(60,202,172,0.12);
   }
-  .tool-icon i{font-size:1.3rem; color:var(--accent-text);}
-  .tool-icon img{width:28px; height:28px; object-fit:contain;}
+  .tool-icon i{font-size:1.8rem; color:var(--accent-text);}
+  .tool-icon img{width:48px; height:48px; object-fit:contain;}
   .tool-card h3{
     font-family:var(--font-display); font-weight:700; font-size:1.15rem; color:var(--text-dark);
   }
@@ -316,8 +313,9 @@
   .featured-visual{
     position:relative; background:var(--gradient);
     display:flex; align-items:center; justify-content:center; min-height:260px;
+    padding:32px;
   }
-  .featured-visual svg{width:56%; height:auto;}
+  .featured-visual img{max-width:200px; width:100%; height:auto;}
   .featured-body{padding:44px;}
   .featured-body span.kicker{margin-bottom:10px;}
   .featured-body h3{
@@ -395,7 +393,7 @@
     <div>
       <span class="eyebrow"><span class="dot"></span>Open to collaboration · since 2016</span>
       <h1>I build businesses, digital tools &amp; a <em class="grad-text">portfolio</em>, not just dreams.</h1>
-      <p class="lead">Hi, I'm Atiqah. From selling honey on the side to running a full ecommerce store, free tools for SMEs, and my own trading desk, it all started in 2016 and it's still growing.</p>
+      <p class="lead">Hi, I'm Atiqah. In 2016, I started with one simple goal: sell honey online. Along the way, that journey grew into an ecommerce business, free digital tools for Malaysian SMEs, and a passion for trading. I'm still building, learning, and sharing every step of the way.</p>
       <div class="hero-actions">
         <a href="#tools" class="btn btn-primary">See Free Tools</a>
         <a href="#ventures" class="btn btn-ghost">My Journey</a>
@@ -442,18 +440,15 @@
     <div class="section-head">
       <span class="kicker">Free for you</span>
       <h2>Tools I built for Malaysian SMEs</h2>
-      <p>I built all of these myself, use them in TIZ Trading, and share them free with other entrepreneurs.</p>
+      <p>I built all of these myself, use them in my businesses, and share them free with other entrepreneurs.</p>
     </div>
     <div class="tools-grid">
 
-      <div class="tool-card has-image" data-reveal>
-       
-        <div class="tool-card-content">
-          <div class="tool-icon"><img src="https://raw.githubusercontent.com/mrsatiqah/mrsatiqah.github.io/00bf9be0933fd2fb7e33b083d2ed60bcda44efdc/img/invoice%20generator%20icon.png" alt="Invoice Generator icon"></div>
-          <h3>Free Invoice Generator</h3>
-          <p>Create a professional invoice for your small business in seconds. No account needed, print or save straight to PDF.</p>
-          <a href="https://mrsatiqah.github.io/free-invoice-generator" class="tool-link">Use the tool <i class="fa-solid fa-arrow-right"></i></a>
-        
+      <div class="tool-card" data-reveal>
+        <div class="tool-icon"><img src="https://raw.githubusercontent.com/mrsatiqah/mrsatiqah.github.io/00bf9be0933fd2fb7e33b083d2ed60bcda44efdc/img/invoice%20generator%20icon.png" alt="Invoice Generator icon"></div>
+        <h3>Free Invoice Generator</h3>
+        <p>Create a professional invoice for your small business in seconds. No account needed, print or save straight to PDF.</p>
+        <a href="https://mrsatiqah.github.io/free-invoice-generator" class="tool-link">Use the tool <i class="fa-solid fa-arrow-right"></i></a>
       </div>
 
       <div class="tool-card" data-reveal>
@@ -490,7 +485,7 @@
       </div>
       <div class="t-item" data-reveal>
         <span class="t-year">2016 — PRESENT</span>
-        <h3>TIZ Trading · Madu Quad Asli</h3>
+        <h3>Madu Quad Asli</h3>
         <p>Started small, selling honey and health products. Now operating across Shopee, TikTok Shop, PGMall, ONPAY, and Website.</p>
         <a href="https://maduquadasli.com" class="site-link" target="_blank" rel="noopener">maduquadasli.com <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
       </div>
@@ -511,18 +506,12 @@
     </div>
     <div class="featured" data-reveal>
       <div class="featured-visual">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="100" cy="150" rx="52" ry="14" fill="#0F172A" opacity="0.15"/>
-          <path d="M65 60 Q100 30 135 60 L130 150 Q100 165 70 150 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2"/>
-          <rect x="82" y="45" width="36" height="18" rx="3" fill="#0F172A"/>
-          <text x="100" y="112" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="15" fill="#0F172A">HONEY</text>
-          <text x="100" y="130" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#0F172A">QUAD ASLI</text>
-        </svg>
+        <img src="https://raw.githubusercontent.com/mrsatiqah/mrsatiqah.github.io/28b3fbb077e6f5330e1146e41e66b8b29cc80119/img/website.png" alt="Website">
       </div>
       <div class="featured-body">
-        <span class="kicker">TIZ Trading Enterprise</span>
+        <span class="kicker">Honey And Wellness</span>
         <h3>From a single jar of honey to a brand ecosystem</h3>
-        <p>maduquadasli.com is now home to TIZ Trading's honey and health products, complete with WooCommerce support, a custom WordPress theme, and a presence across 5 sales platforms. Built, maintained, and grown by hand since 2016.</p>
+        <p>MaduQuadasli.com started with a simple mission: make quality honey more accessible online. Since 2016, it has grown into an ecommerce store, serving customers across multiple online sales channels.</p>
         <a href="https://maduquadasli.com" class="btn btn-primary" target="_blank" rel="noopener">Visit maduquadasli.com</a>
       </div>
     </div>
@@ -543,8 +532,6 @@
   <div class="wrap footer-inner">
     <span class="logo">mrs<span class="grad-text">atiqah</span>.</span>
     <div class="footer-links">
-      <a href="https://wa.me/60179098305" target="_blank" rel="noopener">WhatsApp</a>
-      <a href="https://maduquadasli.com" target="_blank" rel="noopener">Madu Quad Asli</a>
       <a href="https://mrsatiqah.github.io/trading-notes/" target="_blank" rel="noopener">Trading Notes</a>
     </div>
     <span class="footer-note">© 2026 Atiqah. Built with love in Klang.</span>
